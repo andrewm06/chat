@@ -1,21 +1,17 @@
 import type { Metadata } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const poppins = Poppins({
+  variable: "--font-sans",
+  weight: ["400", "500", "600", "700", "800"],
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "ClearView | Instant Window Cleaning Quotes",
-  description: "Get an instant quote and schedule window cleaning with ClearView.",
+  title: "Lime Window Cleaning | Lime Membership Quotes",
+  description:
+    "Get a Lime Membership quote, choose your plan, and schedule your cleaning with Lime Window Cleaning.",
 };
 
 export default function RootLayout({
@@ -24,14 +20,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} bg-slate-50 text-slate-900 antialiased`}
-        >
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <body className={`${poppins.variable} bg-lime-25 text-lime-950 antialiased`}>
+        {children}
+      </body>
+    </html>
   );
 }
