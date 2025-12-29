@@ -1,25 +1,46 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --lime-50: #f0ffe7;
+  --lime-100: #e1ffd1;
+  --lime-200: #c8ffaf;
+  --lime-300: #a0ff7a;
+  --lime-400: #80f15a;
+  --lime-500: #65d943;
+  --lime-600: #4eb432;
+  --lime-700: #3c8f27;
+  --lime-800: #2e6f1f;
+  --lime-900: #24571a;
+  --lime-950: #0f2f0c;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-lime-25: #f6fff1;
+  --color-lime-50: var(--lime-50);
+  --color-lime-100: var(--lime-100);
+  --color-lime-200: var(--lime-200);
+  --color-lime-300: var(--lime-300);
+  --color-lime-400: var(--lime-400);
+  --color-lime-500: var(--lime-500);
+  --color-lime-600: var(--lime-600);
+  --color-lime-700: var(--lime-700);
+  --color-lime-800: var(--lime-800);
+  --color-lime-900: var(--lime-900);
+  --color-lime-950: var(--lime-950);
+  --font-sans: var(--font-sans);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: linear-gradient(135deg, #c8ffaf 0%, #f6fff1 48%, #c8ffaf 100%);
+  color: var(--color-lime-950);
 }
 
-.glass-panel {
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
-  backdrop-filter: blur(16px);
+.lime-card {
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+}
+
+.lime-glow {
+  box-shadow: 0 22px 60px rgba(101, 217, 67, 0.28);
 }
