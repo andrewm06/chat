@@ -1,51 +1,16 @@
-# ClearView Window Cleaning Quotes
+# Lime Window Cleaning Quote App
 
-An end-to-end Next.js (App Router) app that provides instant window cleaning quotes, optional scheduling, and an admin dashboard with Clerk authentication and Prisma/PostgreSQL persistence.
+A conversion-focused Next.js (App Router) experience that mirrors the Lime Window Cleaning brand and funnels visitors into the **Quarterly Cleaning** plan. The flow covers quote capture, plan selection, mock scheduling, and a confirmation page—optimized for Wix redirects.
 
-## Step-by-step plan
-1. Scaffold a Next.js App Router project with Tailwind CSS v4 and shared UI components.
-2. Model data with Prisma (User, Quote, Appointment) and implement reusable pricing/validation helpers.
-3. Build public experience: instant price calculation, server-validated quote creation, optional scheduling.
-4. Add authenticated admin dashboard to review quotes and manage appointment statuses.
-5. Wire API routes for quote capture and admin appointment updates; enforce server-side validation and auth.
-6. Document environment variables, database setup, and Vercel deployment steps.
+## Features
+- **Brand-true UI:** Lime gradients, rounded cards, and Lime Membership cards styled like the Wix site. Quarterly plan is pre-selected and highlighted.
+- **Quote flow:** `/quote` accepts an optional `address` query param from Wix. Collects address (required) plus optional first/last name, phone, and email.
+- **API-backed pricing:** `POST /api/quote` calls an n8n webhook (configurable) with Zod validation, timeout, and a mock mode.
+- **Plan selection:** Bi-Annual, Quarterly (most popular), and Monthly cards with checklist features and clear value framing.
+- **Scheduling:** Local mock scheduling for the next 30 days and four time slots. `POST /api/schedule` is ready for future Google Calendar integration.
+- **Confirmation:** `/success` summarizes address, plan, price, and scheduled time with a link back to limelx.com.
 
-## File structure
-```
-app/
-  api/
-    admin/appointments/route.ts    # Admin-only status updates
-    quotes/route.ts                # Public quote capture
-  admin/page.tsx                   # Admin dashboard (Clerk-protected)
-  layout.tsx                       # Root layout with ClerkProvider
-  globals.css
-  page.tsx                         # Public landing + quote form
-components/
-  admin/
-    AdminAppointments.tsx
-    AppointmentList.tsx
-    QuotesTable.tsx
-  layout/Header.tsx
-  quote/
-    QuoteForm.tsx
-    QuoteSummary.tsx
-  ui/
-    badge.tsx
-    button.tsx
-    card.tsx
-    input.tsx
-    label.tsx
-lib/
-  auth.ts
-  pricing.ts
-  prisma.ts
-  validation.ts
-middleware.ts
-prisma/
-  schema.prisma
-```
-
-## Setup
+## Getting started
 1. Install dependencies:
    ```bash
    npm install
@@ -53,23 +18,35 @@ prisma/
 2. Configure environment:
    ```bash
    cp .env.example .env
-   # Update DATABASE_URL, Clerk keys, and NEXT_PUBLIC_APP_URL
+   # Defaults use mock quotes and mock scheduling
    ```
-3. Generate Prisma client:
-   ```bash
-   DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/window_quotes" npx prisma generate
-   ```
-4. Run dev server:
+3. Run the app:
    ```bash
    npm run dev
    ```
+4. Open the quote flow:
+   ```
+   http://localhost:3000/quote
+   ```
 
-## Deployment (Vercel)
-1. Set environment variables in Vercel: `DATABASE_URL`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, `NEXT_PUBLIC_APP_URL`.
-2. Provision a PostgreSQL database (e.g., Vercel Postgres, Neon, Supabase) and apply migrations when added.
-3. Deploy via `vercel` CLI or GitHub integration; Vercel will build with `npm run build` and start with `next start`.
+## Environment variables
+`USE_MOCK_QUOTES` and `USE_MOCK_SCHEDULING` are `true` by default for local development.
 
-## Notes
-- Pricing is enforced at $8/window with a $199 minimum.
-- All inputs are validated server-side with Zod; invalid requests return structured errors.
-- Admin access requires the Clerk user to have `privateMetadata.role = "admin"` or a database role of `ADMIN`.
+```
+N8N_QUOTE_WEBHOOK_URL=""   # Set for live pricing; leave blank for mock quotes
+USE_MOCK_QUOTES=true
+USE_MOCK_SCHEDULING=true   # Set to false when Google Calendar is wired
+GOOGLE_CALENDAR_CLIENT_ID=""
+GOOGLE_CALENDAR_CLIENT_SECRET=""
+GOOGLE_CALENDAR_REDIRECT_URI=""
+GOOGLE_CALENDAR_ID=""
+```
+
+## API routes
+- `POST /api/quote` – sends `{ address, firstName?, lastName?, phone?, email?, source }` to the n8n webhook or returns mock quotes. Validates responses with Zod and times out after 10s.
+- `POST /api/schedule` – mock scheduler that returns a combined ISO timestamp. Includes TODOs for Google Calendar using the provided OAuth env vars.
+
+## Notes for production
+- Set `USE_MOCK_QUOTES=false` and provide `N8N_QUOTE_WEBHOOK_URL` to enable live pricing.
+- Implement Google Calendar inside `/api/schedule` and set `USE_MOCK_SCHEDULING=false` when ready.
+- The homepage (`/`) redirects to `/quote` to keep the funnel focused.
